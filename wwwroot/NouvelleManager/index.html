@@ -93,8 +93,8 @@
                 let texte = $(`<div class="ellipsis">${nouvelle.Texte}</div>`);
                 let date = $(`<div class="ellipsis">${convertToFrenchDate(toDateTime(nouvelle.Date))}</div>`);
                 let img = $(`<div class="ellipsis"> <img src="${nouvelle.ImageUrl}" alt="oops"></div>`);
-                //let editCmd = $(`<div class="cmd editCmd fa fa-pencil-square" bookmarkid="${nouvelle.Id}" title="Editer ${nouvelle.Titre}" data-toggle="tooltip">`);
-                //let deleteCmd = $(`<div class="cmd deleteCmd fa fa-window-close" bookmarkid="${nouvelle.Id}" title="Effacer ${nouvelle.Titre}" data-toggle="tooltip">`);
+                let editCmd = $(`<div class="cmd editCmd fa fa-pencil-square" nouvelleid="${nouvelle.Id}" title="Editer ${nouvelle.Titre}" data-toggle="tooltip">`);
+                let deleteCmd = $(`<div class="cmd deleteCmd fa fa-window-close" nouvelleid="${nouvelle.Id}" title="Effacer ${nouvelle.Titre}" data-toggle="tooltip">`);
                 let bookmarkRow = $("<div class='bookmarkLayout bookmarkRow'>");
                 bookmarkRow.append(catElem);
                 bookmarkRow.append(titElem);
@@ -102,8 +102,8 @@
                 bookmarkRow.append(date);
                 bookmarkRow.append(img);
                 bookmarkRow.append(`<br>`);
-                //bookmarkRow.append(editCmd);
-                //bookmarkRow.append(deleteCmd);
+                bookmarkRow.append(editCmd);
+                bookmarkRow.append(deleteCmd);
                 $("#nouvelleList").append(bookmarkRow);
             }
 
