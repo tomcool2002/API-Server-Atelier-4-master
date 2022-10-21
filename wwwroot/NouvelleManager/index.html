@@ -120,7 +120,8 @@
 
         function ModifNouvelle(e){
             let nouvelle = {Id: parseInt($("#Id_input").val()), Categorie: $("#category_input").val(),Titre: $("#title_input").val(),Texte: $("#texte_input").val(), ImageUrl: $("#url_input").val(), Date: parseInt($("#Date_input").val()) }
-            PUT(e,null,error);
+            //console.log(nouvelle);
+            PUT(nouvelle,getNouvelle,error);
         }
 
         function deleteNouvelle(e){
