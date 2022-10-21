@@ -125,7 +125,11 @@
         }
 
         function deleteNouvelle(e){
-            GET_ID(e.target.getAttribute("nouvelleid"), bookmarkToForm, error);
+            GET_ID(e.target.getAttribute("nouvelleid"), EnleveNouvelle, error);
+        }
+
+        function EnleveNouvelle(nouvelle){
+            DELETE(nouvelle.Id,getNouvelle,error);
         }
 
         function Printnouvelles(nouvelles) {
