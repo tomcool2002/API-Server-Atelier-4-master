@@ -63,7 +63,8 @@ body {
 
 }
 .bookmarkLayout {
-    
+    display: grid;
+    grid-template-columns: 0.5fr 40px 1fr 35px 35px;
     align-items: center;
     border-radius: 8px;
     padding-left: 5px;
@@ -103,11 +104,7 @@ label {
     margin-bottom: 5px;
 }
 
-.ellipsis {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+
 div2, span2 {
     border:1px solid red;
 }
