@@ -23,6 +23,29 @@
         </div>
     </div>
 
+    <div style="background-color: white;"  id="bookmarkDlg">
+        <form id="bookmakForm">
+            <input type="hidden" id="Id_input" value="0">
+            <input type="hidden" id="Date_input" value="0">
+
+            <label for="texte_input">Texte</label>
+            <input type="text" id="texte_input" class="form-control" required invalidMessage="Obligatoire">
+
+            <label for="title_input">Titre</label>
+            <input type="text" id="title_input" class="form-control" required invalidMessage="Obligatoire">
+
+            <label for="url_input">Hyperlien de l'image</label>
+            <input type="url" id="url_input" class="form-control URL" required
+                invalidMessage="Lien invalide">
+
+            <label for="category_input">Catégorie</label>
+            <input type="text" id="category_input" class="form-control" required
+                invalidMessage="Obligatoire">
+            
+            <button id="conf">Confirmer</button>
+        </form>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -79,6 +102,31 @@
             return weekday + ", " + date.toLocaleDateString("fr-FR", options) + " - " + date.toLocaleTimeString("fr-FR");
         }
 
+        function editNouvelle(e){
+            GET_ID(e.target.getAttribute("nouvelleid"), DialogEdit, error);
+        }
+
+        function DialogEdit(e){
+            $("#Date_input").val(e.Date);
+            $("#Id_input").val(e.Id);
+            $("#title_input").val(e.Titre);
+            $("#texte_input").val(e.Texte);
+            $("#url_input").val(e.ImageUrl);
+            $("#category_input").val(e.Categorie);
+            $("#conf").click(e => ModifNouvelle(e))
+            $("#bookmarkDlg").dialog({autoOpen: true,});
+
+        }
+
+        function ModifNouvelle(e){
+            let nouvelle = {Id: parseInt($("#Id_input").val()), Categorie: $("#category_input").val(),Titre: $("#title_input").val(),Texte: $("#texte_input").val(), ImageUrl: $("#url_input").val(), Date: parseInt($("#Date_input").val()) }
+            PUT(e,null,error);
+        }
+
+        function deleteNouvelle(e){
+            GET_ID(e.target.getAttribute("nouvelleid"), bookmarkToForm, error);
+        }
+
         function Printnouvelles(nouvelles) {
 
 
@@ -105,6 +153,8 @@
                 bookmarkRow.append(editCmd);
                 bookmarkRow.append(deleteCmd);
                 $("#nouvelleList").append(bookmarkRow);
+                $(".editCmd").click(e => { editNouvelle(e) });
+                $(".deleteCmd").click(e => { deleteNouvelle(e) });
             }
 
         }
