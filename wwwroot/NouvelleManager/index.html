@@ -16,9 +16,39 @@
 <body>
     <div class="mainContainer">
         <span class="test"></span>
+        <div class="headerPanel">
+            <div class="headerLayout">
+                
+                <span class="header">Gestionnaire de Nouvelles </span>
+                <span class="cmd fa fa-plus-square" id="newBookmarkCmd" title="Ajouter un favori"
+                    data-toggle="tooltip"></span>
+            </div>
+        </div>
         <div class="scrollContainer">
             <div id="nouvelleList">
                 <!-- filled programmatically-->
+            </div>
+        </div>
+        <div>
+            <div id="bookmarkDlg">
+                <form id="bookmakForm">
+                    <input type="hidden" id="Id_input" value="0">
+
+                    <label for="titre_input">Titre</label>
+                    <input type="text" id="title_input" class="form-control" required invalidMessage="Obligatoire">
+
+                    <label for="imageUrl_input">Url Image</label>
+                    <input type="url" id="url_input" class="form-control URL" required invalidMessage="Lien invalide">
+
+                    <label for="category_input">Catégorie</label>
+                    <input type="text" id="category_input" class="form-control" required invalidMessage="Obligatoire">
+                </form>
+            </div>
+            <div id="confirmDeleteDlg">
+                <span id="confirmationMessage"></span>
+            </div>
+            <div id="errorDlg">
+                <span id="errorMessage"></span>
             </div>
         </div>
     </div>
@@ -43,7 +73,7 @@
 
         init();
 
-        function init(){
+        function init() {
 
             getNouvelle();
         }
@@ -57,7 +87,7 @@
             console.log("erreur");
         }
 
-        function toDateTime(secs){ 
+        function toDateTime(secs) {
             var t = new Date(secs / 1000 * 1000);
             return t;
         }
@@ -87,7 +117,7 @@
             }
             function Printnouvelle(nouvelle) {
 
-                
+
                 let catElem = $(`<div class="ellipsis">${nouvelle.Categorie}</div>`);
                 let titElem = $(`<div class="ellipsis">${nouvelle.Titre}</div>`);
                 let texte = $(`<div class="ellipsis">${nouvelle.Texte}</div>`);
@@ -109,58 +139,64 @@
 
         }
 
+        function newNouvelle() {
+            holdCheckETag = true;
+            createMode = true;
+            resetNouvelleForm()
+            $("#bookmarkDlg").dialog('option', 'titre', 'Ajout une nouvelle');
+            $("#bookmarkDlgOkBtn").text("Ajouter");
+            $("#bookmarkDlg").dialog('open');
+        }
 
-        // function getBookmarksList() {
-        //     function prepareQueryString() {
-        //         let queryString = "?sort=Category&sort=Title";
-        //         if (!hideSearchBar) {
-        //             selectedCategory = $("#searchCategory").val();
-        //             let searchTitle = $("#searchTitle").val();
-        //             if (selectedCategory != "")
-        //                 queryString += "&Category=" + selectedCategory;
-        //             if (searchTitle != "")
-        //                 queryString += "&Title=*" + searchTitle + "*";
-        //         }
-        //         return queryString;
-        //     }
-        //     GET_ALL(refreshBookmarksList, error, prepareQueryString());
-        //     GET_ALL(refreshCategoryList, error, "?fields=Category");
-        // }
-        // function refreshBookmarksList(bookmarks, ETag) {
-        //     function makeFavicon(url) {
-        //         let link = $(`<a href='${url}' target='_blank'></a>`)
-        //         link.append($(`<img class='favicon' src="https://www.google.com/s2/favicons?domain=${url}&sz=48">`));
-        //         return link;
-        //     }
-        //     function insertIntoBookmarkList(bookmark) {
-        //         let catElem = $(`<div class="ellipsis">${bookmark.Category}</div>`);
-        //         let titElem = $(`<div  class="ellipsis">${bookmark.Title}</div>`);
-        //         let editCmd = $(`<div class="cmd editCmd fa fa-pencil-square" bookmarkid="${bookmark.Id}" title="Editer ${bookmark.Title}" data-toggle="tooltip">`);
-        //         let deleteCmd = $(`<div class="cmd deleteCmd fa fa-window-close" bookmarkid="${bookmark.Id}" title="Effacer ${bookmark.Title}" data-toggle="tooltip">`);
-        //         let bookmarkRow = $("<div class='bookmarkLayout bookmarkRow'>");
-        //         bookmarkRow.append(catElem);
-        //         bookmarkRow.append(makeFavicon(bookmark.Url));
-        //         bookmarkRow.append(titElem);
-        //         bookmarkRow.append(editCmd);
-        //         bookmarkRow.append(deleteCmd);
-        //         $("#nouvelleList").append(bookmarkRow);
-        //     }
-        //     currentETag = ETag;
-        //     previousScrollPosition = $(".scrollContainer").scrollTop();
-        //     $("#nouvelleList").empty();
-        //     let currentCategory = "";
-        //     for (let bookmark of bookmarks) {
-        //         if (bookmark.Category !== currentCategory)
-        //             currentCategory = bookmark.Category;
-        //         else
-        //             bookmark.Category = "";
-        //         insertIntoBookmarkList(bookmark);
-        //     }
-        //     $(".scrollContainer").scrollTop(previousScrollPosition);
-        //     $(".editCmd").click(e => { editBookmark(e) });
-        //     $(".deleteCmd").click(e => { deleteBookmark(e) });
-        //     $('[data-toggle="tooltip"]').tooltip();
-        // }
+        function resetNouvelleForm() {
+            $("#Id_input").val("0");
+            $("#titre_input").val("");
+            $("#imageUrl_input").val("");
+            $("#category_input").val("");
+        }
+
+        function init_UI() {
+            $("#newBookmarkCmd").click(newBookmark)
+
+            $("#bookmarkDlg").dialog({
+                title: "Nouvelle nouvelle",
+                autoOpen: false,
+                modal: true,
+                show: { effect: 'fade', speed: 400 },
+                hide: { effect: 'fade', speed: 400 },
+                width: 400,
+                minWidth: 400,
+                maxWidth: 500,
+                height: 440,
+                minHeight: 440,
+                maxHeight: 440,
+                position: { my: "top", at: "top", of: window },
+                buttons: [{
+                    id: "bookmarkDlgOkBtn",
+                    text: "Title will be changed dynamically",
+                    click: function () {
+                        let bookmark = bookmarkFromForm();
+                        if (bookmark) {
+                            if (createMode)
+                                POST(bookmark, getBookmarksList, error);
+                            else
+                                PUT(bookmark, getBookmarksList, error);
+                            resetBookmarkForm();
+                            holdCheckETag = false;
+                            $(this).dialog("close");
+                        }
+                    }
+                },
+                {
+                    text: "Annuler",
+                    click: function () {
+                        holdCheckETag = false;
+                        $(this).dialog("close");
+                    }
+                }]
+            });
+        }
+
     </script>
 
 

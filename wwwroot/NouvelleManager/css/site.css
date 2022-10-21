@@ -52,7 +52,7 @@ body {
 
 .headerLayout {
     display: grid;
-    grid-template-columns: 50px 35px 35px 35px 35px 19px;
+    grid-template-columns: 50px auto 35px 35px 19px;
     align-items: center;
 
 }
@@ -63,7 +63,6 @@ body {
 
 }
 .bookmarkLayout {
-
     
     align-items: center;
     border-radius: 8px;
